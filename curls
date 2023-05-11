@@ -1,0 +1,103 @@
+//// Normal requests
+// Returns all titles from movies.json
+curl -H "Content-Type: application/json" -XGET 127.0.0.1:9200/movies/_search?pretty
+// Request body search example
+curl -H "Content-Type: application/json" -XGET 127.0.0.1:9200/movies/_search?pretty -d '
+{
+  "query": {
+    "match": {
+      "title": "start"
+    }
+  }
+}'
+
+
+//// Query lite
+// Returns all titles with 'star' like 'Star Wars'
+curl -H "Content-Type: application/json" -XGET 127.0.0.1:9200/movies/_search?q=title:start
+// Returns all titles released after 2010 with 'trek' like 'Star Trek'
+curl -H "Content-Type: application/json" -XGET 127.0.0.1:9200/movies/_search?q=+year:>2010+title:trek
+// Browser condification for tests
+curl -H "Content-Type: application/json" -XGET 127.0.0.1:9200/movies/_search?q=%2Byear%3A%3E2010+%2Btitle%3Atrek
+ curl -H "Content-Type: application/json" -XGET "127.0.0.1:9200/movies/_search?q=mary%20poppins&pretty"
+
+//// Filtering
+// Bolean Query with filter
+curl -H "Content-Type: application/json" -XGET 127.0.0.1:9200/movies/_search?pretty -d '
+{
+  "query": {
+    "bool": {
+      "must":{"term":{"title":"trek"}},
+      "filter":{range":{"year":{"gte":2010}}}
+    }
+  }
+}'
+
+// Match query type
+curl -H "Content-Type: application/json" -XGET 127.0.0.1:9200/movies/_search?pretty -d '
+{
+  "query": {
+    "match": {
+      "title":"star"
+    }
+  }
+}'
+
+// Match phrase and slop (for example 'star beyond' == 'beyond start' == 'star trek beyond')
+curl -H "Content-Type: application/json" -XGET 127.0.0.1:9200/movies/_search?pretty -d '
+{
+  "query": {
+    "match_phrase": {
+      "title": {"query": "star beyond", "slop": 1}
+    }
+  }
+}'
+
+//// Looking for 'star wars' movies released after 1980
+// Using query lite
+curl -H "Content-Type: application/json" -XGET "127.0.0.1:9200/movies/_search?q=%2Byear:>1980+title:star%20wars&pretty"
+
+curl -H "Content-Type: application/json" -XGET 127.0.0.1:9200/movies/_search?pretty -d '
+{
+  "query": {
+    "bool": {
+      "must": {
+        "match_phrase": {"title" : "Star Wars"}
+      },
+      "filter": {
+        "range": {"year": {"gte": 1980}}
+      }
+    }
+  }
+}'
+
+//// Indexing
+curl -H "Content-Type: application/json" -XGET "127.0.0.1:9200/movies/_search?size=2&from=2&pretty"
+curl -H "Content-Type: application/json" -XGET 127.0.0.1:9200/movies/_search?pretty -d '
+{
+  "from":2,
+  "size":2,
+  "query":{"match":{"genre":"Sci-Fi"}}
+}'
+
+//// Sorting
+// By number
+curl -H "Content-Type: application/json" -XGET "127.0.0.1:9200/movies/_search?sort=year&pretty"
+// By string
+// First we need to exclude the index and remake the mapping
+curl -H "Content-Type: application/json" -XDELETE "127.0.0.1:9200/movies/
+curl -H "Content-Type: application/json" -XPUT 127.0.0.1:9200/movies/ -d '
+{
+  "mappings": {
+    "properties" : {
+      "title": {
+        "type" : "text",
+        "fields": {
+          "raw": {"type": "keyword"}
+        } 
+      }
+    }
+  }
+}'
+curl -H "Content-Type: application/json" -XPUT 127.0.0.1:9200/_bulk --data-binary @/data/movies.json
+curl -H "Content-Type: application/json" -XGET "127.0.0.1:9200/movies/_search?sort=title.raw&pretty"
