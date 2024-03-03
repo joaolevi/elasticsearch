@@ -1,0 +1,104 @@
+{
+  "mappings": {
+    "properties": {
+        "order_id": {
+          "type": "keyword"
+        },
+        "order_status": {
+          "type": "keyword"
+        },
+        "purchase_timestamp": {
+          "type": "date",
+          "format": "yyyy-MM-dd HH:mm:ss"
+        },
+        "approved_at": {
+          "type": "date",
+          "format": "yyyy-MM-dd HH:mm:ss"
+        },
+        "delivered_carrier_date": {
+          "type": "date",
+          "format": "yyyy-MM-dd HH:mm:ss"
+        },
+        "delivered_customer_date": {
+          "type": "date",
+          "format": "yyyy-MM-dd HH:mm:ss"
+        },
+        "estimated_delivery_date": {
+          "type": "date",
+          "format": "yyyy-MM-dd HH:mm:ss"
+        },
+        "items": {
+          "type": "nested",
+          "properties": {
+            "product_category_name": {
+              "type": "keyword"
+            },
+            "product_name_length": {
+              "type": "float"
+            },
+            "product_description_length": {
+              "type": "float"
+            },
+            "product_photos_qty": {
+              "type": "float"
+            },
+            "product_weight_g": {
+              "type": "float"
+            },
+            "product_length_cm": {
+              "type": "float"
+            },
+            "product_height_cm": {
+              "type": "float"
+            },
+            "product_width_cm": {
+              "type": "float"
+            },
+            "order_item_id": {
+              "type": "float"
+            },
+            "product_id": {
+              "type": "keyword"
+            },
+            "seller_id": {
+              "type": "keyword"
+            },
+            "shipping_limit_date": {
+              "type": "date",
+              "format": "yyyy-MM-dd HH:mm:ss"
+            },
+            "price": {
+              "type": "float"
+            },
+            "freight_value": {
+              "type": "float"
+            }
+          }
+        },
+        "review": {
+          "properties": {
+            "review_id": {
+              "type": "keyword"
+            },
+            "review_score": {
+              "type": "float"
+            },
+            "review_comment_title": {
+              "type": "text"
+            },
+            "review_comment_message": {
+              "type": "text"
+            },
+            "review_creation_date": {
+              "type": "date",
+              "format": "yyyy-MM-dd HH:mm:ss"
+            },
+            "review_answer_timestamp": {
+              "type": "date",
+              "format": "yyyy-MM-dd HH:mm:ss"
+            }
+          }
+        }
+      }
+    }
+  }

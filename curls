@@ -101,3 +101,29 @@ curl -H "Content-Type: application/json" -XPUT 127.0.0.1:9200/movies/ -d '
 }'
 curl -H "Content-Type: application/json" -XPUT 127.0.0.1:9200/_bulk --data-binary @/data/movies.json
 curl -H "Content-Type: application/json" -XGET "127.0.0.1:9200/movies/_search?sort=title.raw&pretty"
+
+##########################################################
+# Salles
+
+// Count
+curl -H 'Content-Type: application/json' -XGET 'http://127.0.0.1:9200/salles/_count?pretty'
+
+curl -H 'Content-Type: application/json' -XPUT 'http://127.0.0.1:9200/salles' --data-binary @/home/joaolevi/projects/elasticsearch/mappings/salles-mapping.json
+curl -H 'Content-Type: application/json' -XPUT 'http://127.0.0.1:9200/salles2' --data-binary @/home/joaolevi/projects/elasticsearch/mappings/salles-mapping-2.json
+
+curl -H 'Content-Type: application/json' -XPOST 'http://127.0.0.1:9200/salles/_bulk?pretty' --data-binary @/home/joaolevi/projects/elasticsearch/data/data_non_structured.json
+
+curl -H 'Content-Type: application/json' -XGET 'http://127.0.0.1:9200/salles/_search?pretty' -d '
+{
+"query" : {
+"match_phrase" : {
+"review_comment_message" : "triste"
+}
+}
+}
+'
+
+curl -H 'Content-Type: application/json' -XPUT 'http://127.0.0.1:9200/shakespeare' --data-binary @/home/joaolevi/projects/elasticsearch/data/shakes-mapping.json
+curl -H 'Content-Type: application/json' -XPOST 'http://127.0.0.1:9200/shakespeare/_bulk?pretty' --data-binary @/home/joaolevi/projects/elasticsearch/data/data.json
+
+ curl -XDELETE 'http://localhost:9200/salles'

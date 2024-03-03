@@ -1,2 +1,2 @@
 pyinstaller
-elasticsearch
+Elasticsearch==7.0.0
